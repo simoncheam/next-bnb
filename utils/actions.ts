@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import db from './db';
-import { imageSchema, profileSchema, validateWithZodSchema } from './schemas';
+import { imageSchema, profileSchema, propertySchema, validateWithZodSchema } from './schemas';
 //! gets info from user - server env
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
@@ -139,4 +139,24 @@ export const updateProfileImageAction = async (prevState: any, formData: FormDat
   } catch (error) {
     return renderError(error);
   }
+};
+
+export const createPropertyAction = async (prevState: any, formData: FormData): Promise<{ message: string }> => {
+  const user = await getAuthUser();
+
+  try {
+    //get raw data from input field
+    const rawData = Object.fromEntries(formData);
+
+    //! compares propertySchema with rawData
+    const validatedFields = validateWithZodSchema(propertySchema, rawData);
+
+    //! validate with schema
+
+    return { message: 'property created' };
+  } catch (error) {
+    return renderError(error);
+  }
+  // redirect to homepage
+  // redirect('/')
 };

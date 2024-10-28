@@ -147,16 +147,45 @@ export const createPropertyAction = async (prevState: any, formData: FormData): 
   try {
     //get raw data from input field
     const rawData = Object.fromEntries(formData);
+    const file = formData.get('image') as File;
 
     //! compares propertySchema with rawData
     const validatedFields = validateWithZodSchema(propertySchema, rawData);
+    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
 
-    //! validate with schema
+    const fullPath = await uploadImage(validatedFile.image);
 
-    return { message: 'property created' };
+    await db.property.create({
+      data: {
+        ...validatedFields,
+        image: fullPath,
+        profileId: user.id,
+      },
+    });
   } catch (error) {
     return renderError(error);
   }
   // redirect to homepage
-  // redirect('/')
+  redirect('/');
+};
+
+export const fetchProperties = async ({ search = '', category }: { search?: string; category?: string }) => {
+  const properties = await db.property.findMany({
+    where: {
+      category,
+      OR: [{ name: { contains: search, mode: 'insensitive' } }, { tagline: { contains: search, mode: 'insensitive' } }],
+    },
+    select: {
+      id: true,
+      name: true,
+      tagline: true,
+      image: true,
+      price: true,
+      country: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  return properties;
 };

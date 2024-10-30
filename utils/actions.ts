@@ -189,3 +189,30 @@ export const fetchProperties = async ({ search = '', category }: { search?: stri
   });
   return properties;
 };
+
+export const fetchFavoriteId = async ({ propertyId }: { propertyId: string }) => {
+  const user = await getAuthUser();
+  const favorite = await db.favorite.findFirst({
+    where: {
+      propertyId,
+      profileId: user.id,
+    },
+
+    select: {
+      id: true,
+    },
+  });
+  return favorite?.id || null;
+};
+
+export const toggleFavoriteAction = async (prevState: {
+  propertyId: string;
+  favoriteId: string | null;
+  pathname: string;
+}) => {
+  const { propertyId, favoriteId, pathname } = prevState;
+
+  console.log({ propertyId, favoriteId, pathname });
+
+  return { message: 'Favorite toggled' };
+};

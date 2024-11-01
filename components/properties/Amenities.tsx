@@ -7,6 +7,8 @@ const Amenities = ({ amenities }: { amenities: string }) => {
 
   const noAmenities = amenitiesList.every((amentity) => !amentity.selected);
 
+  if (noAmenities) return null;
+
   return (
     <div className='mt-4'>
       <Title text='What this place offers' />

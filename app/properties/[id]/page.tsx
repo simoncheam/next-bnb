@@ -1,5 +1,6 @@
 import FavoriteToggleButton from '@/components/card/FavoriteToggleButton';
 import PropertyRating from '@/components/card/PropertyRating';
+import Amenities from '@/components/properties/Amenities';
 import BookingCalendar from '@/components/properties/booking/BookingCalendar';
 import BreadCrumbs from '@/components/properties/BreadCrumbs';
 import Description from '@/components/properties/Description';
@@ -9,6 +10,7 @@ import ShareButton from '@/components/properties/ShareButton';
 import UserInfo from '@/components/properties/UserInfo';
 import { Separator } from '@/components/ui/separator';
 import { fetchPropertyDetails } from '@/utils/actions';
+import { amenities } from '@/utils/amenities';
 import { redirect } from 'next/navigation';
 
 const PropertyDetailsPage = async ({ params }: { params: { id: string } }) => {
@@ -54,8 +56,8 @@ const PropertyDetailsPage = async ({ params }: { params: { id: string } }) => {
           <PropertyDetails details={details} />
           <UserInfo profile={{ profileImage, firstName }} />
           <Separator className='mt-4' />
-          <Description description={property.description}/>
-
+          <Description description={property.description} />
+          <Amenities amenities={property.amenities} />
         </div>
         <div className='lg:col-span-4 flex flex-col items-center'>
           <BookingCalendar />

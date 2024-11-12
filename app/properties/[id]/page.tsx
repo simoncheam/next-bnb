@@ -1,7 +1,6 @@
 import FavoriteToggleButton from '@/components/card/FavoriteToggleButton';
 import PropertyRating from '@/components/card/PropertyRating';
 import Amenities from '@/components/properties/Amenities';
-import BookingCalendar from '@/components/properties/booking/BookingCalendar';
 import BreadCrumbs from '@/components/properties/BreadCrumbs';
 import Description from '@/components/properties/Description';
 import ImageContainer from '@/components/properties/ImageContainer';
@@ -13,9 +12,9 @@ import SubmitReview from '@/components/reviews/SubmitReview';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchPropertyDetails, findExistingReview } from '@/utils/actions';
+import { auth } from '@clerk/nextjs/server';
 import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
-import { auth } from '@clerk/nextjs/server';
 
 const DynamicMap = dynamic(() => import('@/components/properties/PropertyMap'), {
   ssr: false,
@@ -76,9 +75,7 @@ const PropertyDetailsPage = async ({ params }: { params: { id: string } }) => {
           <Amenities amenities={property.amenities} />
           <DynamicMap countryCode={property.country} />
         </div>
-        <div className='lg:col-span-4 flex flex-col items-center'>
-          <BookingCalendar />
-        </div>
+        <div className='lg:col-span-4 flex flex-col items-center'>{/* <BookingCalendar /> */}</div>
       </section>
       {reviewDoesNotExist && <SubmitReview propertyId={property.id} />}
       <PropertyReviews propertyId={property.id} />

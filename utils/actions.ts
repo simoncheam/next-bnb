@@ -7,6 +7,7 @@ import { createReviewSchema, imageSchema, profileSchema, propertySchema, validat
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { uploadImage } from './supabase';
+import { calculateTotals } from './calculateTotals';
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -395,4 +396,47 @@ export const findExistingReview = async (userId: string, propertyId: string) => 
       propertyId: propertyId,
     },
   });
+};
+
+export const createBookingAction = async (prevState: { propertyId: string; checkIn: Date; checkOut: Date }) => {
+  const user = await getAuthUser();
+
+  const { propertyId, checkIn, checkOut } = prevState;
+
+  const property = await db.property.findUnique({
+    where: {
+      id: propertyId,
+    },
+    select: {
+      price: true,
+    },
+  });
+
+  if (!property) {
+    return { message: 'Property not found' };
+  }
+
+  const { orderTotal, totalNights } = calculateTotals({
+    checkIn,
+    checkOut,
+    price: property.price,
+  });
+  try {
+    const booking = await db.booking.create({
+      data: {
+        checkIn,
+        checkOut,
+        orderTotal,
+        totalNights,
+        profileId: user.id,
+        propertyId,
+      },
+    });
+    if (booking.id) {
+      return { message: 'Booking created successfully' };
+    }
+  } catch (error) {
+    return renderError(error);
+  }
+  redirect('/bookings');
 };

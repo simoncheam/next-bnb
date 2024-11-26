@@ -12,18 +12,26 @@ import UserIcon from './UserIcon';
 import { links } from '@/utils/links';
 import SignOutLink from './SignOutLink';
 import { SignedOut, SignedIn, SignInButton, SignUpButton } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 
 const LinksDropdown = () => {
+  const { userId } = auth();
+  const isAdminUser = userId === process.env.ADMIN_USER_ID;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' className='flex gap-4 max-w-[100px]'>
+        <Button
+          variant='outline'
+          className='flex gap-4 max-w-[100px]'>
           <LuAlignLeft className='w-6 h-6' />
           <UserIcon />
         </Button>
       </DropdownMenuTrigger>
       {/* //! display: if signed in */}
-      <DropdownMenuContent className='w-52' align='start' sideOffset={10}>
+      <DropdownMenuContent
+        className='w-52'
+        align='start'
+        sideOffset={10}>
         <SignedOut>
           <DropdownMenuItem>
             <SignInButton mode='modal'>
@@ -39,9 +47,14 @@ const LinksDropdown = () => {
         </SignedOut>
         <SignedIn>
           {links.map((link) => {
+            if (link.label === 'admin' && !isAdminUser) return null;
             return (
-              <DropdownMenuItem key={link.href}>
-                <Link href={link.href} className='capitalize w-full'>
+              <DropdownMenuItem
+                key={link.href}
+                asChild>
+                <Link
+                  href={link.href}
+                  className='capitalize w-full'>
                   {link.label}
                 </Link>
               </DropdownMenuItem>

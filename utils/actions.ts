@@ -409,6 +409,8 @@ export const findExistingReview = async (userId: string, propertyId: string) => 
 export const createBookingAction = async (prevState: { propertyId: string; checkIn: Date; checkOut: Date }) => {
   const user = await getAuthUser();
 
+  let bookingId: null | string = null;
+
   const { propertyId, checkIn, checkOut } = prevState;
 
   const property = await db.property.findUnique({
@@ -440,12 +442,15 @@ export const createBookingAction = async (prevState: { propertyId: string; check
         propertyId,
       },
     });
+
+    bookingId = booking.id;
+
     revalidatePath(`/properties/${propertyId}`);
     // return { message: 'Booking created successfully' };
   } catch (error) {
     return renderError(error);
   }
-  redirect('/bookings');
+  redirect(`/checkout?bookingId=${bookingId}`);
 };
 
 export const fetchBookings = async () => {

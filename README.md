@@ -1,7 +1,5 @@
 # Next BnB
 
-[![MIT License][license-shield]][license-url]
-
 A modern, feature-rich vacation rental platform built with Next.js, integrating dynamic user interfaces, authentication, and seamless deployment on Vercel.
 
 [![Product Screenshot][product-screenshot]](https://next-bnb.vercel.app)
@@ -25,8 +23,6 @@ Explore the app live: [Next BnB](https://next-bnb.vercel.app)
 ---
 
 ## About The Project
-
-[![Product Thumbnail][product-thumbnail]](https://next-bnb.vercel.app)
 
 Next BnB is an engaging and interactive project designed to help developers build proficiency in web development using Next.js 14. This platform serves as a fully functional vacation rental application, showcasing key concepts in front-end and back-end development.
 
